@@ -10,7 +10,7 @@ license = "Apache-2.0 WITH LLVM-exception"
 name = "wizer"
 readme = "./README.md"
 repository = "https://github.com/bytecodealliance/wizer"
-version = "10.0.0"
+version = "11.0.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -33,10 +33,11 @@ env_logger = { version = "0.11.8", optional = true }
 log = "0.4.27"
 rayon = "1.10.0"
 structopt = { version = "0.3.26", optional = true }
-wasm-encoder = "0.238.0"
-wasmparser = "0.238.0"
+wasm-encoder = { git = "https://github.com/ryankalla/wasm-tools.git" }
+wasmparser = { git = "https://github.com/ryankalla/wasm-tools.git" }
 wasmtime = { workspace = true }
 wasmtime-wasi = { workspace = true, features = ["preview1"] }
+# wasmtime-wasi = { workspace = true, features = ["p1"] }
 
 # Enable this dependency to get messages with WAT disassemblies when certain
 # internal panics occur.
@@ -48,6 +49,8 @@ optional = true
 wasmprinter = "0.238.0"
 wasmtime = "36"
 wasmtime-wasi = "36"
+# wasmtime = { git = "https://github.com/ryankalla/wasmtime.git" }
+# wasmtime-wasi = { git = "https://github.com/ryankalla/wasmtime.git" }
 
 [dev-dependencies]
 criterion = "0.5.1"
@@ -68,3 +71,7 @@ debug = true
 
 [lints.rust]
 unexpected_cfgs = { level = "allow", check-cfg = ['cfg(fuzzing)'] }
+
+# [patch.crates-io]
+# wasmparser = { git = "https://github.com/ryankalla/wasm-tools.git" }
+# wasmtime = { git = "https://github.com/ryankalla/wasmtime.git" }

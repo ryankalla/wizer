@@ -30,9 +30,14 @@ impl Wizer {
         } else {
             let mut data_section = wasm_encoder::DataSection::new();
             for seg in &snapshot.data_segments {
+                let offset_expr = if seg.memory.ty(store).is_64() {
+                    ConstExpr::i64_const(seg.offset as i64)
+                } else {
+                    ConstExpr::i32_const(seg.offset as i32)
+                };
                 data_section.active(
                     seg.memory_index,
-                    &ConstExpr::i32_const(seg.offset as i32),
+                    &offset_expr,
                     seg.data(store).iter().copied(),
                 );
             }

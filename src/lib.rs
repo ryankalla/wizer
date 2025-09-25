@@ -44,6 +44,7 @@ const DEFAULT_WASM_MULTI_MEMORY: bool = true;
 const DEFAULT_WASM_BULK_MEMORY: bool = true;
 const DEFAULT_WASM_SIMD: bool = true;
 const DEFAULT_WASM_REFERENCE_TYPES: bool = true;
+const DEFAULT_WASM_MEMORY64: bool = true;
 
 /// The type of data that is stored in the `wasmtime::Store` during
 /// initialization.
@@ -261,6 +262,12 @@ pub struct Wizer {
     /// Enabled by default.
     #[cfg_attr(feature = "structopt", structopt(long, value_name = "true|false"))]
     wasm_reference_types: Option<bool>,
+
+    /// Enable or disable Wasm memory64 proposal.
+    ///
+    /// Enabled by default.
+    #[cfg_attr(feature = "structopt", structopt(long, value_name = "true|false"))]
+    wasm_memory64: Option<bool>,
 }
 
 impl std::fmt::Debug for Wizer {
@@ -282,6 +289,7 @@ impl std::fmt::Debug for Wizer {
             wasm_bulk_memory,
             wasm_simd,
             wasm_reference_types,
+            wasm_memory64,
         } = self;
         f.debug_struct("Wizer")
             .field("init_func", &init_func)
@@ -300,6 +308,7 @@ impl std::fmt::Debug for Wizer {
             .field("wasm_bulk_memory", &wasm_bulk_memory)
             .field("wasm_simd", &wasm_simd)
             .field("wasm_reference_types", &wasm_reference_types)
+            .field("wasm_memory64", &wasm_memory64)
             .finish()
     }
 }
@@ -365,6 +374,7 @@ impl Wizer {
             wasm_bulk_memory: None,
             wasm_simd: None,
             wasm_reference_types: None,
+            wasm_memory64: None,
         }
     }
 
@@ -583,6 +593,14 @@ impl Wizer {
         self
     }
 
+    /// Enable or disable the Wasm memory64 proposal.
+    ///
+    /// Defaults to `true`.
+    pub fn wasm_memory64(&mut self, enable: bool) -> &mut Self {
+        self.wasm_memory64 = Some(enable);
+        self
+    }
+
     /// Initialize the given Wasm, snapshot it, and return the serialized
     /// snapshot as a new, pre-initialized Wasm module.
     pub fn run(&self, wasm: &[u8]) -> anyhow::Result<Vec<u8>> {
@@ -666,6 +684,8 @@ impl Wizer {
                 .unwrap_or(DEFAULT_WASM_REFERENCE_TYPES),
         );
 
+        config.wasm_memory64(self.wasm_memory64.unwrap_or(DEFAULT_WASM_MEMORY64));
+
         config.wasm_tail_call(true);
         config.wasm_extended_const(true);
 
@@ -679,6 +699,10 @@ impl Wizer {
     fn wasm_features(&self) -> wasmparser::WasmFeatures {
         let mut features = WasmFeatures::WASM2;
 
+        features.set(
+            WasmFeatures::MEMORY64,
+            self.wasm_memory64.unwrap_or(DEFAULT_WASM_MEMORY64),
+        );
         features.set(
             WasmFeatures::MULTI_MEMORY,
             self.wasm_multi_memory.unwrap_or(DEFAULT_WASM_MULTI_MEMORY),

@@ -49,6 +49,7 @@ fn wizen_and_run_wasm(
         .unwrap();
     config.wasm_multi_memory(true);
     config.wasm_multi_value(true);
+    config.wasm_memory64(true);
 
     let engine = wasmtime::Engine::new(&config)?;
     let wasi_ctx = WasiCtxBuilder::new().build_p1();
@@ -175,6 +176,30 @@ fn multi_memory() -> Result<()> {
 "#,
     )
 }
+
+#[test]
+fn memory64() -> Result<()> {
+    run_wat(
+        &[],
+        42,
+        r#"
+(module
+ ;; 80_000 pages * 65536 bytes/page = 5,242,880,000 bytes (~5 GiB)
+ (memory i64 80000)
+ (func (export "wizer.initialize")
+   ;; Fill a ~5GiB region of memory with the value 42.
+   ;; This will be larger than the 32-bit address space.
+   i64.const 0              ;; destination offset
+   i32.const 42             ;; value to fill with
+   i64.const 5_000_000_000  ;; length
+   memory.fill)
+ (func (export "run") (result i32)
+   i64.const 4_999_999_999 ;; An address within the filled region
+   i32.load8_u))
+"#,
+    )
+}
+
 #[test]
 fn reject_imported_memory() -> Result<()> {
     fails_wizening(
