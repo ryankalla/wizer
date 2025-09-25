@@ -1630,7 +1630,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.9.4",
- "windows-sys 0.59.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -2198,7 +2198,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "50143b010bdc3adbd16275710f9085cc80d9c12cb869309a51a98ce2ff96558e"
 dependencies = [
  "leb128fmt",
- "wasmparser 0.238.0",
+ "wasmparser 0.238.1",
+]
+
+[[package]]
+name = "wasm-encoder"
+version = "0.239.0"
+source = "git+https://github.com/ryankalla/wasm-tools.git#a64ae8dd009afcea40daba0585b5674bb6694cf3"
+dependencies = [
+ "leb128fmt",
+ "wasmparser 0.239.0",
 ]
 
 [[package]]
@@ -2230,15 +2239,25 @@ dependencies = [
 
 [[package]]
 name = "wasmparser"
-version = "0.238.0"
+version = "0.238.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c0ad4ca2ecb86b79ea410cd970985665de1d05774b7107b214bc5852b1bcbad7"
+checksum = "3fa99c8328024423875ae4a55345cfde8f0371327fb2d0f33b0f52a06fc44408"
 dependencies = [
  "bitflags 2.5.0",
  "hashbrown",
  "indexmap",
  "semver",
  "serde",
+]
+
+[[package]]
+name = "wasmparser"
+version = "0.239.0"
+source = "git+https://github.com/ryankalla/wasm-tools.git#a64ae8dd009afcea40daba0585b5674bb6694cf3"
+dependencies = [
+ "bitflags 2.5.0",
+ "indexmap",
+ "semver",
 ]
 
 [[package]]
@@ -2254,13 +2273,13 @@ dependencies = [
 
 [[package]]
 name = "wasmprinter"
-version = "0.238.0"
+version = "0.238.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5fec8a560f7288effd1a61fe8d7bfe9fc3efdc2173949d7a5ee38ea9e8eaa336"
+checksum = "cd2d53749ac5922bdc60ef3288adc7b45990fb079331d977b25dd7e83c75c810"
 dependencies = [
  "anyhow",
  "termcolor",
- "wasmparser 0.238.0",
+ "wasmparser 0.238.1",
 ]
 
 [[package]]
@@ -2930,7 +2949,7 @@ dependencies = [
 
 [[package]]
 name = "wizer"
-version = "10.0.0"
+version = "11.0.0"
 dependencies = [
  "anyhow",
  "cap-std",
@@ -2939,9 +2958,9 @@ dependencies = [
  "log",
  "rayon",
  "structopt",
- "wasm-encoder 0.238.0",
- "wasmparser 0.238.0",
- "wasmprinter 0.238.0",
+ "wasm-encoder 0.239.0",
+ "wasmparser 0.238.1",
+ "wasmprinter 0.238.1",
  "wasmtime",
  "wasmtime-wasi",
  "wat",
@@ -2955,7 +2974,7 @@ dependencies = [
  "libfuzzer-sys",
  "log",
  "wasm-smith",
- "wasmprinter 0.238.0",
+ "wasmprinter 0.238.1",
  "wasmtime",
  "wizer",
 ]

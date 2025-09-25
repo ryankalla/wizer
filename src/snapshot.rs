@@ -31,10 +31,10 @@ pub struct DataSegment {
     pub memory: wasmtime::Memory,
 
     /// The offset within the memory that `data` should be copied to.
-    pub offset: u32,
+    pub offset: u64,
 
     /// This segment's length.
-    pub len: u32,
+    pub len: u64,
 }
 
 impl DataSegment {
@@ -50,7 +50,7 @@ impl DataSegment {
     ///
     /// `self` must be in front of `other` and they must not overlap with each
     /// other.
-    fn gap(&self, other: &Self) -> u32 {
+    fn gap(&self, other: &Self) -> u64 {
         debug_assert_eq!(self.memory_index, other.memory_index);
         debug_assert!(self.offset + self.len <= other.offset);
         other.offset - (self.offset + self.len)
@@ -155,8 +155,8 @@ fn snapshot_memories(
                 segments.push(DataSegment {
                     memory_index,
                     memory,
-                    offset: u32::try_from(start).unwrap(),
-                    len: u32::try_from(end - start).unwrap(),
+                    offset: u64::try_from(start).unwrap(),
+                    len: u64::try_from(end - start).unwrap(),
                 });
                 start = end;
             }
@@ -181,7 +181,7 @@ fn snapshot_memories(
     // LEB, two for the memory offset init expression (one for the `i32.const`
     // opcode and another for the constant immediate LEB), and finally one for
     // the data length LEB).
-    const MIN_ACTIVE_SEGMENT_OVERHEAD: u32 = 4;
+    const MIN_ACTIVE_SEGMENT_OVERHEAD: u64 = 4;
     let mut merged_data_segments = Vec::with_capacity(data_segments.len());
     merged_data_segments.push(data_segments[0]);
     for b in &data_segments[1..] {
@@ -225,7 +225,7 @@ fn remove_excess_segments(merged_data_segments: &mut Vec<DataSegment>) {
 
     #[derive(Clone, Copy, PartialEq, Eq)]
     struct GapIndex {
-        gap: u32,
+        gap: u64,
         // Use a `u32` instead of `usize` to fit `GapIndex` within a word on
         // 64-bit systems, using less memory.
         index: u32,

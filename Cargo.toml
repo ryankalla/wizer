@@ -10,7 +10,7 @@ license = "Apache-2.0 WITH LLVM-exception"
 name = "wizer"
 readme = "./README.md"
 repository = "https://github.com/bytecodealliance/wizer"
-version = "10.0.0"
+version = "11.0.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -33,8 +33,10 @@ env_logger = { version = "0.11.8", optional = true }
 log = "0.4.27"
 rayon = "1.10.0"
 structopt = { version = "0.3.26", optional = true }
-wasm-encoder = "0.238.0"
+# wasm-encoder = "0.238.0"
+wasm-encoder = { git = "https://github.com/ryankalla/wasm-tools.git" }
 wasmparser = "0.238.0"
+# wasmparser = { git = "https://github.com/ryankalla/wasm-tools.git" }
 wasmtime = { workspace = true }
 wasmtime-wasi = { workspace = true, features = ["preview1"] }
 
@@ -46,6 +48,7 @@ optional = true
 
 [workspace.dependencies]
 wasmprinter = "0.238.0"
+# wasmprinter = { git = "https://github.com/ryankalla/wasm-tools.git" }
 wasmtime = "36"
 wasmtime-wasi = "36"
 

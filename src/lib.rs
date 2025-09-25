@@ -586,6 +586,8 @@ impl Wizer {
     /// Initialize the given Wasm, snapshot it, and return the serialized
     /// snapshot as a new, pre-initialized Wasm module.
     pub fn run(&self, wasm: &[u8]) -> anyhow::Result<Vec<u8>> {
+        println!("=== Wizer run() ===");
+
         // Parse rename spec.
         let renames = FuncRenames::parse(&self.func_renames)?;
 
@@ -669,6 +671,9 @@ impl Wizer {
         config.wasm_tail_call(true);
         config.wasm_extended_const(true);
 
+        println!("=== Enable wasm memory64 ===");
+        config.wasm_memory64(true);
+
         // Proposals that we should add support for.
         config.wasm_threads(false);
 
@@ -679,6 +684,10 @@ impl Wizer {
     fn wasm_features(&self) -> wasmparser::WasmFeatures {
         let mut features = WasmFeatures::WASM2;
 
+        features.set(
+            WasmFeatures::MEMORY64,
+            true,
+        );
         features.set(
             WasmFeatures::MULTI_MEMORY,
             self.wasm_multi_memory.unwrap_or(DEFAULT_WASM_MULTI_MEMORY),
